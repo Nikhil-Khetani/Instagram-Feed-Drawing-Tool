@@ -10,9 +10,12 @@ class App():
     def setInputPic(self, input_pic):
         self.input_pic = input_pic
         
+    def resizePic(self):
+        pass
+    def splitPic(self):
+        pass
 
-
-
+'''
 def BUTTON_UPLOAD_clicked():
     tk.Tk().withdraw()
     file = tk.filedialog.askopenfilename()
@@ -22,7 +25,7 @@ def BUTTON_UPLOAD_clicked():
 
     input_pic_label = tk.Label(image=test)
     input_pic_label.image = test
-    input_pic_label.grid(column = 4, row=1)
+    input_pic_label.grid(column = 2, row=2)
     
     myApp.setInputPic(image)
 
@@ -34,15 +37,16 @@ window = tk.Tk()
 window.title("Hello World")
 window.geometry('900x600')
 
-lbl = tk.Label(window, text="Hello")
+lbl = tk.Label(window, text="Maximum square resolution of 1080 by 1080")
 lbl.grid(column=0, row=0)
 
 BUTTON_UPLOAD = tk.Button(window, text="Upload Image", command=BUTTON_UPLOAD_clicked)
-BUTTON_UPLOAD.grid(column=2, row=0)
+BUTTON_UPLOAD.grid(column=1, row=1)
 
 
 txt = tk.Entry(window,width=10)
-txt.grid(column=1,row=0)
+txt.grid(column=0,row=1)
 
 
 window.mainloop()
+'''
