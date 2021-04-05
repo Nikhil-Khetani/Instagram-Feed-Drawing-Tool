@@ -3,7 +3,7 @@ import tkinter.filedialog
 from PIL import Image, ImageTk
 import numpy as np
 import os
-
+from copy import deepcopy
 
 
 class App():
@@ -65,11 +65,57 @@ class App():
         return row, col
     
     def getDynamicTiles(self):
-        self.dynamic_tiles = self.tiles # temporary
         return self.dynamic_tiles
 
+    def joinTiles(self):
+        for i in range(int(len(self.dynamic_tiles)/3)):
+            row_tile = np.concatenate((self.dynamic_tiles[3*i+0],self.dynamic_tiles[3*i+1],self.dynamic_tiles[3*i+2]),axis=1)
+            if i==0:
+                self.combined_array = row_tile
+            else:
+                self.combined_array = np.concatenate((self.combined_array,row_tile), axis=0)
+        self.combined_pic = Image.fromarray(self.combined_array)
+        return
+
+    def saveCombinedPic(self,name):
+        try:
+            self.combined_pic.save(name)
+            print('Image Saved')
+        except:
+            print('Unable to save image')
+        return
+
+    def ShiftTiles(self,current_mode):
+        self.dynamic_tiles = deepcopy(self.tiles)
+        empty_array = np.zeros_like(self.tiles[0])
+        if current_mode==-2:
+            self.dynamic_tiles.pop(0)
+            self.dynamic_tiles.pop(0)
+            self.dynamic_tiles.pop()
+        elif current_mode == -1:
+            self.dynamic_tiles.pop(0)
+            self.dynamic_tiles.pop()
+            self.dynamic_tiles.pop()
+        elif current_mode == 1:
+            self.dynamic_tiles.insert(0,empty_array)
+            self.dynamic_tiles.append(empty_array)
+            self.dynamic_tiles.append(empty_array)
+        elif current_mode == 2:
+            self.dynamic_tiles.insert(0,empty_array)
+            self.dynamic_tiles.insert(0,empty_array)
+            self.dynamic_tiles.append(empty_array)
+        return
+
+
+def clearSplitPics():
+    global tile_labels
+    for i in tile_labels:
+        #i.config(image='')
+        i.destroy()
 
 def displaySplitPics():
+    global tile_labels
+
     index=0
     row_offset = 4
     col_offset = 4
@@ -81,6 +127,7 @@ def displaySplitPics():
         row, col = myApp.indexToRowCol(index)
         tile_labels[index].grid(column = col_offset+col, row = row_offset + row)
         index+=1
+    return 
 
 def displayInput(image, col, row):
     width, height = image.size
@@ -101,10 +148,18 @@ def BUTTON_UPLOAD_clicked():
     myApp.setInputPic(file,image)
     myApp.resizePic()
     myApp.splitPic()
-    print(len(myApp.tiles))
+    myApp.ShiftTiles(0)
     displaySplitPics()
+    
 
-def ShowChoice():
+def BUTTON_SAVE_clicked():
+    myApp.joinTiles()
+    myApp.saveCombinedPic("combined_pic.png")
+
+def ShiftMode():
+    myApp.ShiftTiles(mode.get())
+    clearSplitPics()
+    displaySplitPics()
     print(mode.get())
 
 
@@ -115,6 +170,9 @@ window = tk.Tk()
 window.title("Hello World")
 window.geometry('900x600')
 
+
+tile_labels = []
+
 lbl = tk.Label(window, text="Maximum square resolution of 1080 by 1080")
 lbl.grid(column=0, row=0)
 
@@ -123,18 +181,23 @@ BUTTON_UPLOAD.grid(column=0, row=1)
 
 mode = tk.IntVar()
 mode.set(0)
-modes = [("Mode 0", 0),
-   	        ("Mode 1", 1),
-    	    ("Mode 2", 2)]
+modes = [("Shift -2", -2),
+        ("Shift -1", -1),
+        ("Shift 0", 0),
+   	    ("Shift 1", 1),
+    	("Shift 2", 2)]
 tk.Label(window, 
          text="Choose your favourite programming language:").grid(column=0, row=5)
 for name, val in modes:
     tk.Radiobutton(window, 
                    text=name,
                    variable=mode, 
-                   command=ShowChoice,
+                   command=ShiftMode,
                    value=val).grid(column=0, row =6+val)
 
+
+BUTTON_SAVE = tk.Button(window, text="Combine and Save", command=BUTTON_SAVE_clicked)
+BUTTON_SAVE.grid(column=0, row=9)
 
 #txt = tk.Entry(window,width=10)
 #txt.grid(column=0,row=1)
