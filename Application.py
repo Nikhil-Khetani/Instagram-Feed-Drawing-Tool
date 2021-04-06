@@ -153,8 +153,9 @@ def BUTTON_UPLOAD_clicked():
     
 
 def BUTTON_SAVE_clicked():
+    global SAVE_NAME_ENTRY
     myApp.joinTiles()
-    myApp.saveCombinedPic("combined_pic.png")
+    myApp.saveCombinedPic(SAVE_NAME_ENTRY.get()+".png")
 
 def ShiftMode():
     myApp.ShiftTiles(mode.get())
@@ -165,6 +166,17 @@ def ShiftMode():
 
 global myApp
 myApp = App()
+
+row_layout = {
+            'TITLE_LABEL': 1,
+            'SUBTITLE_LABEL': 2,
+            'TEXT_LABEL': 3,
+            'BUTTON_UPLOAD': 4,
+            'SHIFT_MODE_TITLE':5,
+            'SHIFT_MODE_RADIO': 6, #Note this also has the next 4 rows aswell ie 6,7,8,9,10
+            'SAVE_NAME_ENTRY': 11,
+            'BUTTON_SAVE': 12
+            }
 
 window = tk.Tk()
 window.title("Hello World")
@@ -177,7 +189,7 @@ lbl = tk.Label(window, text="Maximum square resolution of 1080 by 1080")
 lbl.grid(column=0, row=0)
 
 BUTTON_UPLOAD = tk.Button(window, text="Upload Image", command=BUTTON_UPLOAD_clicked)
-BUTTON_UPLOAD.grid(column=0, row=1)
+BUTTON_UPLOAD.grid(column=0, row=row_layout['BUTTON_UPLOAD'])
 
 mode = tk.IntVar()
 mode.set(0)
@@ -187,20 +199,23 @@ modes = [("Shift -2", -2),
    	    ("Shift 1", 1),
     	("Shift 2", 2)]
 tk.Label(window, 
-         text="Choose your favourite programming language:").grid(column=0, row=5)
+         text="Choose your favourite programming language:").grid(column=0, row=row_layout['SHIFT_MODE_TITLE'])
 for name, val in modes:
     tk.Radiobutton(window, 
                    text=name,
                    variable=mode, 
                    command=ShiftMode,
-                   value=val).grid(column=0, row =6+val)
+                   value=val).grid(column=0, row = row_layout['SHIFT_MODE_RADIO']+2+val)
+
+
 
 
 BUTTON_SAVE = tk.Button(window, text="Combine and Save", command=BUTTON_SAVE_clicked)
-BUTTON_SAVE.grid(column=0, row=9)
+BUTTON_SAVE.grid(column=0, row=row_layout['BUTTON_SAVE'])
 
-#txt = tk.Entry(window,width=10)
-#txt.grid(column=0,row=1)
+global SAVE_NAME_ENTRY
+SAVE_NAME_ENTRY = tk.Entry(window,text='Name the file to be saved (include .png)', width=10)
+SAVE_NAME_ENTRY.grid(column=0,row=row_layout['SAVE_NAME_ENTRY'])
 
 
 window.mainloop()
