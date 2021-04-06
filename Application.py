@@ -171,11 +171,12 @@ row_layout = {
             'TITLE_LABEL': 1,
             'SUBTITLE_LABEL': 2,
             'TEXT_LABEL': 3,
-            'BUTTON_UPLOAD': 4,
-            'SHIFT_MODE_TITLE':5,
-            'SHIFT_MODE_RADIO': 6, #Note this also has the next 4 rows aswell ie 6,7,8,9,10
-            'SAVE_NAME_ENTRY': 11,
-            'BUTTON_SAVE': 12
+            'TEXT_LABEL2': 4,
+            'BUTTON_UPLOAD': 5,
+            'SHIFT_MODE_TITLE':6,
+            'SHIFT_MODE_RADIO': 7, #Note this also has the next 4 rows aswell ie 6,7,8,9,10
+            'SAVE_NAME_ENTRY': 12,
+            'BUTTON_SAVE': 13
             }
 
 window = tk.Tk()
@@ -185,12 +186,24 @@ window.geometry('900x600')
 
 tile_labels = []
 
-lbl = tk.Label(window, text="Maximum square resolution of 1080 by 1080")
-lbl.grid(column=0, row=0)
+#Title Label
+tk.Label(window, text="Instagram Feed Drawing Tool").grid(column=0, row=row_layout['TITLE_LABEL'])
 
+# Subtitle Label
+tk.Label(window, text="For designing continuous tiled backgrounds for your instagram profile ").grid(column=0, row=row_layout['SUBTITLE_LABEL'])
+
+#Text Label
+tk.Label(window, text="Upload the image you want to use - on first upload we resize automatically for you").grid(column=0, row=row_layout['TEXT_LABEL'])
+#Text Label2
+tk.Label(window, text="Taking into consideration the maximum instagram image square resolution size of 1080 by 1080").grid(column=0, row=row_layout['TEXT_LABEL2'])
+
+#Button Upload Label
 BUTTON_UPLOAD = tk.Button(window, text="Upload Image", command=BUTTON_UPLOAD_clicked)
 BUTTON_UPLOAD.grid(column=0, row=row_layout['BUTTON_UPLOAD'])
 
+#Shift mode title
+
+#Shift mode radio
 mode = tk.IntVar()
 mode.set(0)
 modes = [("Shift -2", -2),
@@ -208,14 +221,16 @@ for name, val in modes:
                    value=val).grid(column=0, row = row_layout['SHIFT_MODE_RADIO']+2+val)
 
 
-
-
-BUTTON_SAVE = tk.Button(window, text="Combine and Save", command=BUTTON_SAVE_clicked)
-BUTTON_SAVE.grid(column=0, row=row_layout['BUTTON_SAVE'])
-
+#Save Name Entry
 global SAVE_NAME_ENTRY
 SAVE_NAME_ENTRY = tk.Entry(window,text='Name the file to be saved (include .png)', width=10)
 SAVE_NAME_ENTRY.grid(column=0,row=row_layout['SAVE_NAME_ENTRY'])
+
+
+#Button Save
+BUTTON_SAVE = tk.Button(window, text="Combine and Save", command=BUTTON_SAVE_clicked)
+BUTTON_SAVE.grid(column=0, row=row_layout['BUTTON_SAVE'])
+
 
 
 window.mainloop()
